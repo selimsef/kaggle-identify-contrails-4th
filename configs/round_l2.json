@@ -1,0 +1,50 @@
+{
+  "network": "TimmUnetPure",
+  "encoder_params": {
+    "encoder": "tf_efficientnet_l2_ns",
+    "in_chans": 3,
+    "num_classes": 1,
+    "drop_path_rate": 0.2
+  },
+  "augmentations": "FlipsAugs",
+  "dataset": {
+    "type": "DatasetSinglePseudoRound",
+    "params": {
+    }
+  },
+  "optimizer": {
+    "train_bs": 8,
+    "val_bs": 16,
+    "type": "AdamW",
+    "weight_decay": 1e-2,
+    "learning_rate": 0.0001,
+    "schedule": {
+      "type": "cosine",
+      "mode": "step",
+      "epochs": 60,
+      "params": {
+        "eta_min": 1e-5
+      }
+    }
+  },
+  "losses": [
+    {
+      "name": "bce",
+      "type": "BCELossCalculator",
+      "weight": 40.0,
+      "display": true,
+      "params": {
+        "field": "mask"
+      }
+    },
+    {
+      "name": "dice",
+      "type": "DiceLossCalculator",
+      "weight": 0.2,
+      "display": true,
+      "params": {
+        "field": "mask"
+      }
+    }
+  ]
+}
